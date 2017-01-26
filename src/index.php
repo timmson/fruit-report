@@ -82,7 +82,6 @@ if ($_REQUEST['mode'] == 'async') {
 }
 
 $VIEW->display($template);
-
-print_r($CORE->debugs);
+//print_r($CORE->debugs);
 ?>
 

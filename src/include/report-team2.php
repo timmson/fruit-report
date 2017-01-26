@@ -1,109 +1,102 @@
 <?
 if ($_REQUEST['mode'] == 'async') {
-	$conn = $CORE->getConnection($currentdep['props']);
+    $conn = $CORE->getConnection($currentdep['props']);
 
-	$team = 'TEAM-2';
+    $team = 'TEAM-2';
 
-	$output = "";
-	switch($_REQUEST['data_type']) {
-			case 'cfd':
-					$date_from = "to_date('2016-06-01', 'yyyy-mm-dd')";
-					$date_till = "trunc(sysdate)";
-					$data = $CORE->executeQuery($conn, "
-					select to_char(d.x_date, 'yyyy-mm-dd') x, 
-						(select count(*) from tasks where team = t.team and trunc(create_date) <= d.x_date) created,
-						(select count(*) from tasks where team = t.team and trunc(start_date) <= d.x_date) started,
-						(select count(*) from tasks where team = t.team and trunc(uat_date) <= d.x_date) uat,
-						(select count(*) from tasks where team = t.team and trunc(close_date) <= d.x_date) closed
-					from date_list d, (select '".$team."' team from dual) t 
-						where d.x_date between ".$date_from." and ".$date_till." order by d.x_date
+    $output = "";
+    switch ($_REQUEST['data_type']) {
+        case 'cfd':
+            $date_from = "date('2016-06-01')";
+            $date_till = "date('now')";
+            $data = $CORE->executeQuery($conn, "
+					select date(d.x_date) x, 
+						(select count(*) from tasks where team = t.team and date(create_date) <= d.x_date) created,
+						(select count(*) from tasks where team = t.team and date(start_date) <= d.x_date) started,
+						(select count(*) from tasks where team = t.team and date(uat_date) <= d.x_date) uat,
+						(select count(*) from tasks where team = t.team and date(close_date) <= d.x_date) closed
+					from date_list d, (select '" . $team . "' team) t 
+						where d.x_date between " . $date_from . " and " . $date_till . " order by d.x_date
 					");
 
-					$cfd_data = array();
-					for ($i=0; $i < count($data); $i++) {
-						$cfd_data[$i] = array('id' => $i, 
-											  'period' => $data[$i]['X'],
-											  'created' => $data[$i]['CREATED'], 
-											  'started' => $data[$i]['STARTED'], 
-											  'throughput' => $data[$i]['CLOSED'] - $data[$i-7]['CLOSED'],
-											  'demand' => $data[$i]['CREATED'] - $data[$i]['STARTED'],
-											  'wip' => $data[$i]['STARTED']-$data[$i]['UAT'], 
-											  'uat' => $data[$i]['UAT'], 
-											  'closed' => $data[$i]['CLOSED']
-										);
-					}
-					$output = json_encode($cfd_data);
-					break; 
-		  case 'cc':
-					$data = $CORE->executeQuery($conn, "select issuekey, round(uat_date - start_date) LEAD_TIME, 
+            $cfd_data = array();
+            for ($i = 0; $i < count($data); $i++) {
+                $cfd_data[$i] = array('id' => $i,
+                    'period' => $data[$i][0],
+                    'created' => $data[$i][1],
+                    'started' => $data[$i][2],
+                    'throughput' => $data[$i][4] - $data[$i - 30][4],
+                    'demand' => $data[$i][1] - $data[$i][2],
+                    'wip' => $data[$i][2] - $data[$i][3],
+                    'uat' => $data[$i][3],
+                    'closed' => $data[$i][4]
+                );
+            }
+            $output = json_encode($cfd_data);
+            break;
+        case 'cc':
+            $data = $CORE->executeQuery($conn, "select key, round(julianday(uat_date) - julianday(start_date)) lead_time, 
 					start_date, close_date from tasks where start_date is not null and close_date is not null 
-					and team = '".$team."' order by close_date");
+					and team = '" . $team . "' order by close_date");
 
-					$cc_data = array();
-					$cc_data_linear = array();
-					$max_lead = 0;
-					for ($i = 0; $i < count($data); $i++) {
-						$cc_data_linear[] = $data[$i]['LEAD_TIME'];
-					}
+            $cc_data = array();
+            $cc_data_linear = array();
+            $max_lead = 0;
+            for ($i = 0; $i < count($data); $i++) {
+                $cc_data_linear[] = $data[$i][1];
+            }
 
-					$cc_data_avg = Math::rollingAvg($cc_data_linear, round(count($cc_data_linear)/20));
-					$percentil = Math::percentil($cc_data_linear, 0.85);
-					$cc_data_linear = Math::trend($cc_data_linear);
+            $cc_data_avg = Math::rollingAvg($cc_data_linear, round(count($cc_data_linear) / 20));
+            $percentil = Math::percentil($cc_data_linear, 0.85);
+            $cc_data_linear = Math::trend($cc_data_linear);
 
 
-					$period = 10;
-					$out_data = array();
-					for ($i = 0; $i < count($data); $i++) {
-						$cc_data[] = array(
-							'id' => $i, 
-							'key' => $data[$i]['ISSUEKEY'].' ['.$data[$i]['CLOSE_DATE'].']', 
-							'count' => $data[$i]['LEAD_TIME'], 
-							'trend' => $cc_data_linear[$i], 
-							'avg' => $cc_data_avg[$i],
-						);
-						$max_lead = ($data[$i]['LEAD_TIME'] > $max_lead) ? $data[$i]['LEAD_TIME'] : $max_lead;
-						
-						if ($data[$i]['LEAD_TIME'] > $percentil) {
-							$out_data[] = array(
-								'key' => $data[$i]['ISSUEKEY'], 
-								'count' => $data[$i]['LEAD_TIME'], 
-								'started' => $data[$i]['START_DATE'], 
-								'closed' => $data[$i]['CLOSE_DATE']
-							);
-						}
-					}
+            $period = 10;
+            $out_data = array();
+            for ($i = 0; $i < count($data); $i++) {
+                $cc_data[] = array(
+                    'id' => $i,
+                    'key' => $data[$i][0] . ' [' . $data[$i][3] . ']',
+                    'count' => $data[$i][1],
+                    'trend' => $cc_data_linear[$i],
+                    'avg' => $cc_data_avg[$i],
+                );
+                $max_lead = ($data[$i][1] > $max_lead) ? $data[$i][1] : $max_lead;
 
-					//hist
-					$hist_data = array();
-					$step = 2;
-					$above_percentil = false;
-					for ($j=1; $j<=($max_lead+$step)/$step; $j++ ){
-						$hist_data[$j] = array('id' => $j*$step, 'count' => 0, 'percentil' => 0);
-						for ($i=0; $i<count($cc_data); $i++) {
-							if ($cc_data[$i]['count'] <= $j*$step && $cc_data[$i]['count'] > ($j-1)*$step) {
-								$hist_data[$j]['count']++;
-							}
-						}
-						if (!$above_percentil && $j*$step>=$percentil) {
-							$hist_data[$j]['percentil'] = $hist_data[$j]['count'];
-							$above_percentil = true;
-						}
-					}
-					$output = json_encode(array('cc_data' => $cc_data, 'hist_data' => $hist_data, 'out_data' => $out_data));
-					break;
-         case 'delta' :
-                    $data = $CORE->executeQuery($conn, "select round(avg(close_date - start_date), 2) ct, count(*) count, to_char(close_date,'yyyy') y 
-						from tasks where start_date is not null and 
-						to_char(close_date,'yyyy') >= to_char(sysdate,'yyyy')-1 and team = '".$team."' 
-						group by to_char(close_date,'yyyy') order by to_char(close_date,'yyyy')");
-					$output = json_encode($data);
-					break;						
-					
-	}
-	
+                if ($data[$i][1] > $percentil) {
+                    $out_data[] = array(
+                        'key' => $data[$i][0],
+                        'count' => $data[$i][1],
+                        'started' => $data[$i][2],
+                        'closed' => $data[$i][3]
+                    );
+                }
+            }
 
-	$CORE->closeConnection($conn);
+            //hist
+            $hist_data = array();
+            $step = 2;
+            $above_percentil = false;
+            for ($j = 1; $j <= ($max_lead + $step) / $step; $j++) {
+                $hist_data[$j] = array('id' => $j * $step, 'count' => 0, 'percentil' => 0);
+                for ($i = 0; $i < count($cc_data); $i++) {
+                    if ($cc_data[$i]['count'] <= $j * $step && $cc_data[$i]['count'] > ($j - 1) * $step) {
+                        $hist_data[$j]['count']++;
+                    }
+                }
+                if (!$above_percentil && $j * $step >= $percentil) {
+                    $hist_data[$j]['percentil'] = $hist_data[$j]['count'];
+                    $above_percentil = true;
+                }
+            }
+            $output = json_encode(array('cc_data' => $cc_data, 'hist_data' => $hist_data, 'out_data' => $out_data));
+            break;
 
-	$VIEW->assign('data', $output);
+    }
+
+
+    $CORE->closeConnection($conn);
+
+    $VIEW->assign('data', $output);
 }
 ?>

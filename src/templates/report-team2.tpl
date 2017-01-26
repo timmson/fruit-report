@@ -58,15 +58,6 @@
 			drawHistogram(source.hist_data);
 			drawOut(source.out_data);
 		});
-		$.getJSON('.?dep={/literal}{$smarty.request.dep}{literal}&mode=async&data_type=delta', function(source) {
-			var delta = ((parseFloat(source[1].CT) - parseFloat(source[0].CT))*100/parseFloat(source[0].CT)).toFixed(2) + "%";
-			var message = '��������� ������� ��������� � ' + source[1].Y + ' ���� �� ��������� � ' + source[0].Y + ' ���� ���������� "' + delta + '"';
-			message += '<br/><span style="font-size:10pt;">('; 
-			message += '������� ����� ��������� � ' + source[0].Y + ' ���� - ' + source[0].CT + ' ����, � ' + source[1].Y + ' ���� - ' + source[1].CT + ' ����. '; 
-			message += '������� ������� �� ��������� ���������� ' + source[0].COUNT + ' � ' + source[1].COUNT  + ' ����� ��������������.'; 
-			message += ')</span>'; 
-			$("#result").html(message);
-		});
 	}
 
 	function drawVelocity(demand, wip, throughput) {

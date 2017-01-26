@@ -59,15 +59,13 @@ class Core
 
     public function executeQuery($conn, $query, $debug = 0)
     {
+        //print_r($query);
         $timeout = microtime();
         $result = $conn->query($query);
-        print_r($result);
-        $i = 0;
-        while ($result->columnName($i)) {
-            $columns[] = $result->columnName($i);
-            $i++;
+        $data = array();
+        while ($row = $result->fetchArray()) {
+            $data[] = $row;
         }
-        $data = $result->fetchArray(SQLITE3_ASSOC);
         $this->debugTimeout('EXECUTE', $timeout, 5);
         $this->debugQuery($query, $data, $debug);
         return $data;
@@ -75,7 +73,7 @@ class Core
 
     public function closeConnection($conn)
     {
-        sqlite_close($conn);
+        $conn->close();
     }
 
     private function debugTimeout($descr, $timeout, $limit)

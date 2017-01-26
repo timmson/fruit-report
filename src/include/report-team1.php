@@ -7,35 +7,35 @@ if ($_REQUEST['mode'] == 'async') {
 	$output = "";
 	switch($_REQUEST['data_type']) {
 			case 'cfd':
-					$date_from = "to_date('2015-01-01', 'yyyy-mm-dd')";
-					$date_till = "trunc(sysdate)";
+					$date_from = "date('2015-01-01')";
+					$date_till = "date('now')";
 					$data = $CORE->executeQuery($conn, "
-					select to_char(d.x_date, 'yyyy-mm-dd') x, 
-						(select count(*) from tasks where team = t.team and trunc(create_date) <= d.x_date) created,
-						(select count(*) from tasks where team = t.team and trunc(start_date) <= d.x_date) started,
-						(select count(*) from tasks where team = t.team and trunc(uat_date) <= d.x_date) uat,
-						(select count(*) from tasks where team = t.team and trunc(close_date) <= d.x_date) closed
-					from date_list d, (select '".$team."' team from dual) t 
+					select date(d.x_date) x, 
+						(select count(*) from tasks where team = t.team and date(create_date) <= d.x_date) created,
+						(select count(*) from tasks where team = t.team and date(start_date) <= d.x_date) started,
+						(select count(*) from tasks where team = t.team and date(uat_date) <= d.x_date) uat,
+						(select count(*) from tasks where team = t.team and date(close_date) <= d.x_date) closed
+					from date_list d, (select '".$team."' team ) t 
 						where d.x_date between ".$date_from." and ".$date_till." order by d.x_date
 					");
 
-					$cfd_data = array();
-					for ($i=0; $i < count($data); $i++) {
-						$cfd_data[$i] = array('id' => $i, 
-											  'period' => $data[$i]['X'],
-											  'created' => $data[$i]['CREATED'], 
-											  'started' => $data[$i]['STARTED'], 
-											  'throughput' => $data[$i]['CLOSED'] - $data[$i-30]['CLOSED'],
-											  'demand' => $data[$i]['CREATED'] - $data[$i]['STARTED'],
-											  'wip' => $data[$i]['STARTED']-$data[$i]['UAT'], 
-											  'uat' => $data[$i]['UAT'], 
-											  'closed' => $data[$i]['CLOSED']
-										);
-					}
-					$output = json_encode($cfd_data);
+				$cfd_data = array();
+				for ($i = 0; $i < count($data); $i++) {
+					$cfd_data[$i] = array('id' => $i,
+						'period' => $data[$i][0],
+						'created' => $data[$i][1],
+						'started' => $data[$i][2],
+						'throughput' => $data[$i][4] - $data[$i - 30][4],
+						'demand' => $data[$i][1] - $data[$i][2],
+						'wip' => $data[$i][2] - $data[$i][3],
+						'uat' => $data[$i][3],
+						'closed' => $data[$i][4]
+					);
+				}
+				$output = json_encode($cfd_data);
 					break; 
 		  case 'cc':
-					$data = $CORE->executeQuery($conn, "select issuekey, round(uat_date - start_date) LEAD_TIME, 
+					$data = $CORE->executeQuery($conn, "select key, round(julianday(uat_date) - julianday(start_date)) lead_time, 
 					start_date, close_date from tasks where start_date is not null and close_date is not null 
 					and team = '".$team."' order by close_date");
 
@@ -43,7 +43,7 @@ if ($_REQUEST['mode'] == 'async') {
 					$cc_data_linear = array();
 					$max_lead = 0;
 					for ($i = 0; $i < count($data); $i++) {
-						$cc_data_linear[] = $data[$i]['LEAD_TIME'];
+						$cc_data_linear[] = $data[$i][1];
 					}
 
 					$cc_data_avg = Math::rollingAvg($cc_data_linear, round(count($cc_data_linear)/20));
@@ -56,19 +56,19 @@ if ($_REQUEST['mode'] == 'async') {
 					for ($i = 0; $i < count($data); $i++) {
 						$cc_data[] = array(
 							'id' => $i, 
-							'key' => $data[$i]['ISSUEKEY'].' ['.$data[$i]['CLOSE_DATE'].']',
-							'count' => $data[$i]['LEAD_TIME'], 
+							'key' => $data[$i][0].' ['.$data[$i][3].']',
+							'count' => $data[$i][1],
 							'trend' => $cc_data_linear[$i], 
 							'avg' => $cc_data_avg[$i]
 						);
-						$max_lead = ($data[$i]['LEAD_TIME'] > $max_lead) ? $data[$i]['LEAD_TIME'] : $max_lead;
+						$max_lead = ($data[$i][1] > $max_lead) ? $data[$i][1] : $max_lead;
 						
-						if ($data[$i]['LEAD_TIME'] > $percentil) {
+						if ($data[$i][1] > $percentil) {
 							$out_data[] = array(
-								'key' => $data[$i]['ISSUEKEY'], 
-								'count' => $data[$i]['LEAD_TIME'], 
-								'started' => $data[$i]['START_DATE'], 
-								'closed' => $data[$i]['CLOSE_DATE']
+								'key' => $data[$i][0],
+								'count' => $data[$i][1],
+								'started' => $data[$i][2],
+								'closed' => $data[$i][3]
 							);
 						}
 					}
@@ -91,14 +91,6 @@ if ($_REQUEST['mode'] == 'async') {
 					}
 					$output = json_encode(array('cc_data' => $cc_data, 'hist_data' => $hist_data, 'out_data' => $out_data));
 					break;
-         case 'delta' :
-                    $data = $CORE->executeQuery($conn, "select round(avg(uat_date - start_date), 2) ct, count(*) count, to_char(close_date,'yyyy') y 
-						from tasks where start_date is not null and 
-						to_char(close_date,'yyyy') >= to_char(sysdate,'yyyy')-1 and team = '".$team."' 
-						group by to_char(close_date,'yyyy') order by to_char(close_date,'yyyy')");
-					$output = json_encode($data);
-					break;					
-					
 	}
 	
 

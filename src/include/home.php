@@ -1,5 +1,5 @@
 <?
-$conn = $CORE->getConnection($currentdep['props']);
+/*$conn = $CORE->getConnection($currentdep['props']);
 
 //cfd
 $data = $CORE->executeQuery($conn, "
@@ -51,6 +51,6 @@ $CORE->closeConnection($conn);
 
 $VIEW->assign('cc_data', $cc_data);
 $VIEW->assign('hist_data', $hist_data);
-$VIEW->assign('cfd_data', $cfd_data);
+$VIEW->assign('cfd_data', $cfd_data);*/
 
 ?>
