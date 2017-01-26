@@ -1,0 +1,10 @@
+version: '2'
+services:
+   fm-report:
+     build:
+       context: .
+       dockerfile: web.docker
+     ports:
+       - "8000:80"
+     container_name: fm-report
+     restart: always
