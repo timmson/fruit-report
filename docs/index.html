@@ -2,9 +2,138 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Agile report</title>
 </head>
 <body>
-<h1>Test</h1>
+<table>
+    <tr>
+        <td colspan="2" style="text-align: center;">
+            <h2>&quot;Спидометры&quot;</h2>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="img/image001.png" alt="image"/></td>
+        <td>
+            <p><strong><i>Demand</i></strong><em> - количество задач в очереди на текущий
+                момент</em></p>
+
+            <p><strong><i>WIP</i></strong><em> - количество задач в работе на текущий
+                момент</em></p>
+
+            <p><strong><i>Throughput</i></strong><em> - пропускная способность за последние
+                30 дней</em></p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">
+            <h2>Кумулятивная диаграмма потока задач (Cumulative flow diagram)</h2>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="img/image002.png" alt="image"/></td>
+        <td>
+            <p>Это графическое представление того, на какой стадии находятся задачи по
+                проекту. Каждая цветная область на графике соответствует одному из возможных
+                статусов задачи. При клике на любой из цветных квадратиков на графике
+                появляется или исчезает соответствующая область.</p>
+
+            <p>Ее удобно использовать для определения &quot;узких мест&quot; в вашем
+                проекте, например, если вы видите, что растет область &quot;На проверке&quot;,
+                это значит, что необходимо выяснить, почему проверяющий не нашел времени
+                принять/отклонить задачи. Или, скажем, если в проекте растет количество
+                отклоненных задач, то руководитель сможет вовремя заметить это и узнать, в чем
+                причина (невнятное ТЗ, конфликт в коллективе, болезнь и снижение
+                работоспособности сотрудника, и т.д.)</p>
+
+            <p><em><span style='color:blue'>Ц</span><span style='color:red'>в</span><span
+                    style='color:#FF9900'>е</span><span style='color:green'>т</span><span
+                    style='color:blue'>н</span><span style='color:red'>ы</span><span
+                    style='color:#FF9900'>е</span> линии (кроме <span style='color:#33CCCC'>голубой</span>
+                и <span style='color:#CC99FF'>фиолетовой</span>)&nbsp; - показывают количество
+                задач, пересекших соответствующие им стадии (указаны в легенде).</em></p>
+
+            <p><em><span style='color:#CC99FF'>Фиолетовая линия</span> - размер WIP</em></p>
+
+            <p><em><span style='color:#33CCCC'>Голубая линия - </span>пропускная
+                способность за последние 30 дней</em></p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">
+            <h2>Контрольная диаграмма времени выполнения задач (Control chart)</h2>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="img/image003.png" alt="image"/></td>
+        <td>
+            <p>Это графическое представление результатов процесса во времени и в сравнении
+                с установленными <em>контрольными границами</em>, имеющее осевую линию,
+                помогающую определить тренд величин по графику в направлении каждой из <em>контрольных
+                    границ</em>.</p>
+
+            <p><strong><i>Ось X</i></strong><em> - последовательно закртыые задачи</em></p>
+
+            <p><em><span style='color:blue'>Высота синего столба</span> - время выполнения
+                задачи</em></p>
+
+            <p><em><span style='color:red'>Красная линия</span> - линейный <a
+                    href="http://math.semestr.ru/trend/trend-example.php">тренд</a></em></p>
+
+            <p><em><span style='color:#FF9900'>Желтая линия</span> - скользящая средняя</em></p>
+
+            <p><strong>Тренд </strong>-&nbsp;это закономерность описывающая подъем или
+                падение показателя в динамике.&nbsp;Как и любая другая регрессия, тренд может
+                быть как линейным (степень влияющего фактора t равна 1) так и нелинейным
+                (степень больше или меньше единицы). Так как линейная регрессия является самой
+                простейшей, хотя далеко не всегда самой точной.</p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            &nbsp;
+        </td>
+    </tr>
+    <td colspan="2" style="text-align: center;">
+        <h2>Гистограмма распределения времени выполнения задач</h2>
+    </td>
+    <tr>
+        <td><img src="img/image004.png" alt="image"/></td>
+        <td>
+            <p>Это графическое представление функции, приближающая плотность вероятности
+                распределения, построенная на основе выборки из него.</p>
+
+            <p>Позволяет понять, за сколько времени какое количество задач закрыто.</p>
+
+            <p><strong><i><span style='color:black'>Ось X</span></i></strong><em><span
+                    style='color:black'> - длительность в днях</span></em></p>
+
+            <p><em><span style='color:blue'>Высота синего столба</span> - количество задач</em></p>
+
+            <p><em><span style='color:red'>Красная отметка</span> - 85-ая процентиль.</em></p>
+
+            <p><strong>Процентиль</strong><span class=w> - значения</span>, <span class=w>выделяющие</span>
+                <span class=w>100</span>-<span class=w>е</span> <span class=w>части</span> <span
+                        class=w>распределения</span>, <span class=w>выстроенные</span> <span class=w>в</span>
+                <span class=w>ряд</span> <span class=w>по</span> <span class=w>их</span> <span
+                        class=w>величине</span>. 85<span class=w>&nbsp;</span>-<span class=w>й</span> <span
+                        class=w>процентиль</span> <span class=w>распределения</span> <span class=w>дохода</span>,
+                <span class=w>например</span>, <span class=w>представляет</span> <span class=w>собой</span>
+                <span class=w>такое время закрытия задач</span>, <span class=w>когда</span> <span
+                        class=w>только</span> <span class=w>15</span> <span class=w>процентов</span>
+                задач были сделано за большее количество дней.</p>
+
+        </td>
+    </tr>
+</table>
 </body>
 </html>

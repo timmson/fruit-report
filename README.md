@@ -1,5 +1,6 @@
-# Fruit Report
-Agile reporting
+# Agile Report
+
+Read more about diagrams - https://timmson.github.io/fruit-report/
 
 ## Requirements
 
