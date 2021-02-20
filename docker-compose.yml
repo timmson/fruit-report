@@ -1,10 +1,12 @@
-version: '2'
+version: '3.8'
 services:
    fm-report:
      build:
        context: .
        dockerfile: web.docker
      ports:
-       - "8000:80"
+       - "8080:80"
      container_name: fm-report
      restart: always
+     volumes:
+       - "./web/:/var/www/html/"
