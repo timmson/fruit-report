@@ -6,7 +6,7 @@ Read more about diagrams - [https://timmson.github.io/fruit-report/](https://tim
 
 ### As "classic"
     * Apache >= 2.2
-    * PHP >= 7.4
+    * PHP >= 5.6
     * SQLite >= 3
 
 ### As Docker container
