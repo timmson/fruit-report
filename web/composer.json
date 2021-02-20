@@ -1,0 +1,20 @@
+{
+    "name": "timmson/fruit-report",
+    "description": "Fruit report",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "timmson",
+            "email": "timmson666@mail.ru"
+        }
+    ],
+    "scripts": {
+        "test": "vendor/bin/phpunit test",
+        "coverage": "vendor/bin/phpunit --coverage-html ./tmp test"
+    },
+    "require": {}
+}

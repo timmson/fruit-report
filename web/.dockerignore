@@ -1,0 +1,5 @@
+.phpunit.result.cache
+composer.*
+phpunit.xml
+test/
+tmp/
