@@ -1,4 +1,5 @@
 <?php
+
 class Math {
 	
    public static function trend($data) {
@@ -48,4 +49,3 @@ class Math {
 		return $result;
 	}
 }
-?>
