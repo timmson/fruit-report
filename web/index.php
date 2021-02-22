@@ -1,8 +1,7 @@
-<?
-require_once('./lib/corelib.inc.php');
-require_once('./lib/mathlib.inc.php');
+<?php
+require_once(__DIR__."/vendor/autoload.php");
 
-//error_reporting(E_ALL);
+error_reporting(E_ERROR);
 
 $siteconfig = './config/site.ini';
 
@@ -83,5 +82,3 @@ if ($_REQUEST['mode'] == 'async') {
 
 $VIEW->display($template);
 //print_r($CORE->debugs);
-?>
-

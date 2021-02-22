@@ -1,4 +1,4 @@
-<?
+<?php
 $db = sqlite_open('db/schema.sqlite');
 print_r(sqlite_query($db, 'select * from tasks'));
 

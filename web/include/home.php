@@ -1,4 +1,4 @@
-<?
+<?php
 /*$conn = $CORE->getConnection($currentdep['props']);
 
 //cfd
@@ -53,4 +53,3 @@ $VIEW->assign('cc_data', $cc_data);
 $VIEW->assign('hist_data', $hist_data);
 $VIEW->assign('cfd_data', $cfd_data);*/
 
-?>
