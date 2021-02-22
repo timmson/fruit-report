@@ -1,5 +1,10 @@
 <?php
 
+namespace ru\timmson\FruitReport;
+
+use Smarty;
+use SQLite3;
+
 class Core
 {
 

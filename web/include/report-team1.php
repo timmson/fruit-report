@@ -1,4 +1,7 @@
 <?php
+
+use ru\timmson\FruitReport\Math;
+
 if ($_REQUEST['mode'] == 'async') {
 	$conn = $CORE->getConnection($currentdep['props']);
 

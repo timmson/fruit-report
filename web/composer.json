@@ -16,7 +16,7 @@
         "psr-4": {
             "ru\\timmson\\FruitReport\\": "src"
         },
-        "files": ["./lib/corelib.inc.php", "./lib/mail.inc.php"]
+        "files": []
     },
     "scripts": {
         "test": "vendor/bin/phpunit test",
