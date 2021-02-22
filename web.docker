@@ -1,6 +1,8 @@
-FROM php:5.6-apache
+FROM php:7.4-apache
 
 COPY web/ /var/www/html/
+
+#RUN docker-php-ext-install sqlite
 
 RUN chown www-data:www-data -R /var/www/html && chmod 744 -R /var/www/html
 

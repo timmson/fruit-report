@@ -1,4 +1,7 @@
-<?
+<?php
+
+namespace ru\timmson\FruitReport;
+
 class Math {
 	
    public static function trend($data) {
@@ -48,4 +51,3 @@ class Math {
 		return $result;
 	}
 }
-?>

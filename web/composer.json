@@ -12,9 +12,19 @@
             "email": "timmson666@mail.ru"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "ru\\timmson\\FruitReport\\": "src"
+        },
+        "files": []
+    },
     "scripts": {
         "test": "vendor/bin/phpunit test",
         "coverage": "vendor/bin/phpunit --coverage-html ./tmp test"
     },
-    "require": {}
+    "require": {
+        "smarty/smarty": "^3.1",
+        "ext-json": "^7.4",
+        "ext-sqlite3": "^7.4"
+    }
 }

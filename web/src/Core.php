@@ -1,4 +1,9 @@
-<?
+<?php
+
+namespace ru\timmson\FruitReport;
+
+use Smarty;
+use SQLite3;
 
 class Core
 {
@@ -7,7 +12,6 @@ class Core
     public $admin_tpl = 'index.tpl';
     public $default_tpl = 'home.tpl';
     public $login_tpl = 'login.tpl';
-    public $smarty_class_path = './smarty/Smarty.class.php';
     public $smarty_compile_dir = './smarty/templates_c/';
     public $smarty_config_dir = './smarty/config/';
     public $smarty_cache_dir = './smarty/cache/';
@@ -105,7 +109,6 @@ class Core
 
     private function initsmarty()
     {
-        require_once($this->smarty_class_path);
         $this->smarty = new Smarty;
         $this->smarty->compile_dir = $this->smarty_compile_dir;
         $this->smarty->config_dir = $this->smarty_config_dir;
@@ -263,5 +266,3 @@ class Core
     }
 
 }
-
-?>
