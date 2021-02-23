@@ -49,8 +49,8 @@ if ($_REQUEST['mode'] == 'async') {
                 $cc_data_linear[] = $data[$i][1];
             }
 
-            $cc_data_avg = Math::rollingAvg($cc_data_linear, round(count($cc_data_linear) / 20));
-            $percentil = Math::percentil($cc_data_linear, 0.85);
+            $cc_data_avg = Math::rollingAverage($cc_data_linear, round(count($cc_data_linear) / 20));
+            $percentil = Math::percentile($cc_data_linear, 0.85);
             $cc_data_linear = Math::trend($cc_data_linear);
 
 
