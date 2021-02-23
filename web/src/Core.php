@@ -8,16 +8,9 @@ use SQLite3;
 class Core
 {
 
-    public $admin_php = 'index.php';
     public $admin_tpl = 'index.tpl';
     public $default_tpl = 'home.tpl';
-    public $login_tpl = 'login.tpl';
-    public $smarty_compile_dir = './smarty/templates_c/';
-    public $smarty_config_dir = './smarty/config/';
-    public $smarty_cache_dir = './smarty/cache/';
-    public $smarty_pages_dir = '../pages/';
-    public $files_dir = './files/';
-    public $fotos_dir = './fotos/';
+    public $smarty_compile_dir = './templates_c/';
     public $img_admin_dir = './img/';
     public $inc_admin_dir = './include/';
     public $js_dir = './js/';
@@ -37,7 +30,7 @@ class Core
         if ($conf != null) {
             $this->configuration = $conf;
             $this->init();
-            $this->initsmarty();
+            $this->initSmarty();
             $this->initdeps();
         }
     }
@@ -53,7 +46,7 @@ class Core
         $this->configuration['admin']['copyright'] = $this->configuration['admin']['copyright'] . '-' . date("Y");
     }
 
-    public function getConnection($props)
+    public function getConnection($props): SQLite3
     {
         $timeout = microtime();
         $conn = new SQLite3('db/schema.sqlite');
@@ -61,7 +54,7 @@ class Core
         return $conn;
     }
 
-    public function executeQuery($conn, $query, $debug = 0)
+    public function executeQuery($conn, $query, $debug = 0): array
     {
         //print_r($query);
         $timeout = microtime();
@@ -107,13 +100,11 @@ class Core
         $this->debugs[] = $trace;
     }
 
-    private function initsmarty()
+    private function initSmarty()
     {
         $this->smarty = new Smarty;
-        $this->smarty->compile_dir = $this->smarty_compile_dir;
-        $this->smarty->config_dir = $this->smarty_config_dir;
-        $this->smarty->cache_dir = $this->smarty_cache_dir;
-        $this->smarty->template_dir = $this->tpl_admin_dir;
+        $this->smarty->setCompileDir($this->smarty_compile_dir);
+        $this->smarty->setTemplateDir($this->tpl_admin_dir);
         $this->smarty->assign('const', $this->configuration);
         $this->smarty->assign('factory', $this);
     }
@@ -151,20 +142,6 @@ class Core
         }
     }
 
-    public function applypolicy($login, $zone)
-    {
-        $deps = $this->getdeps($zone);
-        for ($i = 0; $i < count($deps); $i++) {
-            if (($deps[$i]['access'] != '') && (strpos($deps[$i]['access'], $login) === false)) {
-                $deps[$i]['access'] = 1;
-            } else {
-                $deps[$i]['access'] = 0;
-            }
-        }
-        $this->smarty->assign('deps', $deps);
-        $this->smarty->assign('currentrole', $this->roles[$login]);
-    }
-
     public function customErrorHandler($errno, $errstr, $errfile, $errline)
     {
         global $CORE;
@@ -197,52 +174,7 @@ class Core
         }
     }
 
-    public function debugRequestAndSession()
-    {
-        $trace = 'REQUEST:';
-        $trace .= '<pre>';
-        $trace .= print_r($_REQUEST, true);
-        $trace .= '</pre>';
-        $this->debugs[] = $trace;
-
-        $trace = 'SESSION:';
-        $trace .= '<pre>';
-        $trace .= print_r($_SESSION, true);
-        $trace .= '</pre>';
-        $this->debugs[] = $trace;
-    }
-
-    public function timestamp2date($time)
-    {
-        return date($this->configuration['global']['dateformat'], $time);
-    }
-
-    function sendmail($sender, $email, $subject, $body)
-    {
-        //TODO move to site.ini
-        $headers = "From: " . $sender . "\n" .
-            "Content-Type: text/html; charset=windows-1251\n" .
-            "X-Mailer: PHP/" . phpversion();
-        mail($email, $subject, $body, $headers);
-    }
-
-    function fromutf($str)
-    {
-        return iconv('UTF-8', $this->configuration['global']['encoding'], $str);
-    }
-
-    function toutf($str)
-    {
-        return iconv($this->configuration['global']['encoding'], 'UTF-8', $str);
-    }
-
-
-    function getzones()
-    {
-        return $this->zones;
-    }
-
-    function getdeps($zone)
+    function getDepartments($zone)
     {
         for ($i = 0; $i < count($this->zones); $i++) {
             if ($this->zones[$i]['name'] == $zone || $zone == '') {
@@ -251,18 +183,18 @@ class Core
                 return $this->zones[$i]['dep'];
             }
         }
-        return $this->getdeps('');
+        return $this->getDepartments('');
     }
 
-    function getcurrentdep($zone, $dep)
+    function getCurrentDepartment($zone, $dep)
     {
-        $deps = $this->getdeps($zone);
+        $deps = $this->getDepartments($zone);
         for ($i = 0; $i < count($deps); $i++)
             if ($deps[$i]['name'] == $dep || $dep == '') {
                 $this->smarty->assign('currentdep', $deps[$i]);
                 return $deps[$i];
             }
-        return $this->getcurrentdep($zone, '');
+        return $this->getCurrentDepartment($zone, '');
     }
 
 }

@@ -13,37 +13,17 @@ $VIEW = $CORE->smarty;
 set_error_handler(array($CORE, 'customErrorHandler'));
 
 /* * * Session params block ** */
-if (isset($_REQUEST['appid'])) {
-    $_SESSION['appid'] = trim($_REQUEST['appid']);
-}
-
-$VIEW->assign("appid", $_SESSION['appid']);
 
 if (isset($_REQUEST['zone'])) {
     $_SESSION['zone'] = $_REQUEST['zone'];
 }
-
-$old = $_SESSION[$_SESSION['zone'] . '_recent'];
-if ($old[0] != $_SESSION['appid']) {
-    $new = array();
-    $new[0] = $_SESSION['appid'];
-    $exist = false;
-    for ($i = 1; $i < 7; $i++) {
-        if ($old[$i - 1] == $new[0]) {
-            $exist = true;
-        }
-        $new[$i] = $exist == true ? $old[$i] : $old[$i - 1];
-    }
-    $_SESSION[$_SESSION['zone'] . '_recent'] = $new;
-}
-$VIEW->assign("recent", $_SESSION[$_SESSION['zone'] . '_recent']);
 
 if (isset($_REQUEST['dep'])) {
     $_SESSION['dep'] = $_REQUEST['dep'];
 }
 /* * * End of session params block ** */
 
-$currentdep = $CORE->getcurrentdep($_SESSION['zone'], $_SESSION['dep']);
+$currentdep = $CORE->getCurrentDepartment($_SESSION['zone'], $_SESSION['dep']);
 $_SESSION['dep'] = $currentdep['name'];
 
 /* * * Temprary debug ** */
@@ -64,9 +44,8 @@ try {
 /* * * End of Temprary debug ** */
 
 $template = $CORE->admin_tpl;
-$CORE->applypolicy($_SESSION['login'], $_SESSION['zone']);
 $VIEW->assign('dep', $_SESSION['dep']);
-$VIEW->assign('zone', $_SESSION['zone']);
+
 if ($_REQUEST['mode'] == 'async') {
     if ($_REQUEST['oper'] == 'xls') {
         header("Content-Type:  application/vnd.ms-excel; charset=".$CORE->configuration['global']['encodingHTML']);
@@ -79,8 +58,6 @@ if ($_REQUEST['mode'] == 'async') {
 		header("Content-Type:  application/json; charset=".$CORE->configuration['global']['encodingHTML']);
 		$template = 'json.tpl';
     }
-} else {
-    //$CORE->log_access();
 }
 
 $VIEW->display($template);
