@@ -27,7 +27,7 @@ class Math
      * Returns "a" and "b" for linear approximation (y=a+bx)
      *
      * @param $data
-     * @return float[]
+     * @return array
      */
     public static function linearApproximation($data): array
     {
