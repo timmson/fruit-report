@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Jira Metrics</title>
+    <link rel="stylesheet" href="./assets/index.css">
+    <script type="text/javascript" src="./assets/jquery.min.js"></script>
+</head>
+<body>
+Команда:<input type="text" id="team" name="team" value=""/>&nbsp;
+Запрос:<input type="text" id="query" name="query" value="" size="200"/>&nbsp;
+<input type="button" id="submit" name="submit" value="Построить!">
+
+<h2 id="title">...</h2>
+<div style="width: 100%; height: 500px; text-align:center" id="velocity">
+    Loading ...
+</div>
+
+<h3 id="description1">...</h3>
+<div style="width: 100%; height: 800px; text-align:center" id="cfd">
+    Loading ...
+</div>
+
+<h3 id="description2">...</h3>
+<div style="width: 100%; height: 800px; text-align:center" id="cc">
+    Loading ...
+</div>
+
+<h3 id="description3">...</h3>
+<div style="width: 100%; height: 800px; text-align:center" id="ht">
+    Loading ...
+</div>
+
+<h3 id="description4">...</h3>
+<div style="width: 100%; height: 800px; text-align:center" id="longest">
+    Loading ...
+</div>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="./assets/data.js"></script>
+<script type="text/javascript" src="./assets/draw.js"></script>
+<script type="text/javascript" src="./assets/index.js"></script>
+</body>
+</html>

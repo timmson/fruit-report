@@ -1,0 +1,22 @@
+{
+  "name": "jira-metrics",
+  "version": "1.0.0",
+  "description": "jira metrics",
+  "main": "app.js",
+  "scripts": {
+    "lint": "npx eslint app.js server.js ./src ./test --fix",
+    "test": "npx jest",
+    "coverage": "npx jest --collectCoverage",
+    "fetch": "node app.js",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jira-client": "^6.21.1"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}

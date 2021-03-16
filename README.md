@@ -1,31 +1,10 @@
-# Agile Report
+# Jira Metrics
 
-Read more about diagrams - [https://timmson.github.io/fruit-report/](https://timmson.github.io/fruit-report/)
+## Install and startup
 
-## Requirements
-
-### As "classic"
-    * Apache >= 2.2
-    * PHP >= 5.6
-    * SQLite >= 3
-
-### As Docker container
-    * Docker Compose
-
-## Installation
-
-### Get last sources
-```
-git clone https://github.com/timmson/fruit-report.git 
-```
-
-### Run
-```
-cd fruit-report/
-docker-compose run -d
-```
-
-### Open in browser
-```
-http://localhost:8080
-```
+1. Install Node.JS and NPM
+1. ```npm i```
+1. Fill ```config.js``` by example ```config.example.js```
+1. Fill ```credentials.js``` by example ```credentials.example.js```
+1. ```npm start```
+1. Open http://localhost:8080
