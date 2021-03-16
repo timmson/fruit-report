@@ -106,6 +106,7 @@ function report(config, data) {
 		longest: {
 			tasks: longestTasks,
 			url: `${config.protocol}://${config.host}/issues/?jql=issuekey in (${longestTasks.map((t) => t.key).join(",")})`
+			baseUrl: `${config.protocol}://${config.host}`
 		}
 	};
 }
