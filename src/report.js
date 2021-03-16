@@ -105,7 +105,7 @@ function report(config, data) {
 		ht: MathHelper.histogram(completedTasks.map((t) => t.ct), percentile85),
 		longest: {
 			tasks: longestTasks,
-			url: `${config.protocol}://${config.host}/issues/?jql=issuekey in (${longestTasks.map((t) => t.key).join(",")})`
+			url: `${config.protocol}://${config.host}/issues/?jql=issuekey in (${longestTasks.map((t) => t.key).join(",")})`,
 			baseUrl: `${config.protocol}://${config.host}`
 		}
 	};
