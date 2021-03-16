@@ -1,7 +1,7 @@
 {
-  "name": "jira-metrics",
+  "name": "fruit-report",
   "version": "1.0.0",
-  "description": "jira metrics",
+  "description": "fruit-report",
   "main": "app.js",
   "scripts": {
     "lint": "npx eslint app.js server.js ./src ./test --fix",

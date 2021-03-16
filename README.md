@@ -1,4 +1,6 @@
-# Jira Metrics
+# Fruit Report
+
+Read more about diagrams - [https://timmson.github.io/fruit-report/](https://timmson.github.io/fruit-report/)
 
 ## Install and startup
 
