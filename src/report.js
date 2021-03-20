@@ -1,4 +1,4 @@
-const MathHelper = require("./math-helper");
+const {average, controlChart, histogram, linearApproximation, percentile} = require("./math-helper");
 const StatusHelper = require("./status-helper");
 const transform = require("./transform");
 
@@ -27,9 +27,9 @@ function report(config, data) {
 	const completedTasks = createdTasks.filter((t) => statusHelper.isDone(t)).sort(compareTasks);
 
 	const currentDate = new Date();
-	const averageCycleTime = MathHelper.average(completedTasks.map((t) => t.ct));
-	const abLinear = MathHelper.linearApproximation(completedTasks.map((t) => t.ct));
-	const percentile85 = MathHelper.percentile(completedTasks.map((t) => t.ct), 0.85);
+	const averageCycleTime = average(completedTasks.map((t) => t.ct));
+	const abLinear = linearApproximation(completedTasks.map((t) => t.ct));
+	const percentile85 = percentile(completedTasks.map((t) => t.ct), 0.85);
 
 	const cfd = [];
 	const threeMonthsAgoDate = new Date(currentDate.getTime());
@@ -62,8 +62,8 @@ function report(config, data) {
 		percentile85: percentile85,
 		linearApproximation: abLinear,
 		cfd: cfd,
-		cc: MathHelper.controlChart(completedTasks, abLinear),
-		ht: MathHelper.histogram(completedTasks.map((t) => t.ct), percentile85),
+		cc: controlChart(completedTasks, abLinear),
+		ht: histogram(completedTasks.map((t) => t.ct), percentile85),
 		longest: {
 			tasks: longestTasks,
 			url: `${config.protocol}://${config.host}/issues/?jql=issuekey in (${longestTasks.map((t) => t.key).join(",")})`,
