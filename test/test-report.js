@@ -2,53 +2,42 @@ const report = require("../src/report");
 
 describe(" Report should", () => {
 
-    test("return data", () => {
-        const config = {
-            protocol: "https",
-            host: "jira.atlassian.com",
-        };
-        const data = {
-            issues: [
-                {
-                    key: "JIRA-1",
-                    changelog: {
-                        histories: [
-                            /*
-                                created: new Date(),
-                                items: [
-                                    {
-                                        field: "status",
-                                        toString: "In Progress"
-                                    }
-                                ]
-                            },
-                            {
+	test("return data", () => {
+		const config = {
+			protocol: "https",
+			host: "jira.atlassian.com",
+			query: "project = ALL",
+			statuses: {
+				start: ["Open"],
+				end: ["Closed"]
+			}
+		};
 
-                                created: new Date(),
-                                items: [
-                                    {
-                                        field: "status",
-                                        toString: "Closed"
-                                    }
-                                ]
+		const arrange = {
+			issues: [
+				{
+					key: "JIRA-1", changelog: {
+						histories: [
+							{created: new Date("2015-03-20"), items: [{field: "status", toString: "In Progress"}]},
+							{created: new Date("2015-03-25"), items: [{field: "status", toString: "Closed"}]}
+						]
+					}
+				},
+				{
+					key: "JIRA-2",
+					changelog: {
+						histories: [
+							{created: new Date("2015-03-22"), items: [{field: "status", toString: "In Progress"}]},
+						]
+					}
+				}
+			]
+		};
 
-                                }*/
-                        ]
-                    }
-                },
-                {
-                    key: "JIRA-2",
-                    changelog: {
-                        histories: []
-                    }
-                }
-            ]
-        };
-        const result = report(config, data);
+		const result = report(config, arrange);
 
-        expect(result).not.toBeNaN();
-
-        //console.log(JSON.stringify(result, null, 2));
-    })
+		expect(result.cc).toHaveLength(1);
+		expect(result).toBeDefined();
+	});
 
 });

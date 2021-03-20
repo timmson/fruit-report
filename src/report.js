@@ -1,53 +1,14 @@
 const MathHelper = require("./math-helper");
 const StatusHelper = require("./status-helper");
-
-function transform(data) {
-	const tasks = [];
-
-	for (let i =0; i < data.issues.length; i++) {
-		const issue = data.issues[i];
-		const task = {"key": issue.key, "status": "Open", "history": []};
-
-		if (issue.changelog.histories.length > 0) {
-			task.history.push({"status" : "Open", "date" : new Date(issue.changelog.histories[0].created)});
-			for (let j = 0; j < issue.changelog.histories.length; j++) {
-				const history = issue.changelog.histories[j];
-				for (let k = 0; k < history.items.length; k++) {
-					const item = history.items[k];
-					if (item.field === "status") {
-						task.history.push({"status" : item.toString, "date" : new Date(history.created)});
-						task.status = item.toString;
-					}
-				}
-			}
-
-			tasks.push(task);
-		} else {
-			//console.log(task.key);
-		}
-
-	}
-
-	return tasks;
-}
+const transform = require("./transform");
 
 function compareTasks(t1, t2) {
 	return t1.endDate.getTime() > t2.endDate.getTime() ? 1 : -1;
 }
 
-function toCC(t, i, a, abLinear) {
-	return {
-		key: t.key,
-		ct: t.ct,
-		avg: MathHelper.rollingAverage(a.map((t) => t.ct), i, 5),
-		trend: Math.floor(i*abLinear[1] + abLinear[0]),
-		endDate: t.endDate
-	};
-}
-
 function report(config, data) {
 	const statusHelper = new StatusHelper(config);
-	const tasks = transform(data);
+	const tasks = transform(data, config.statuses.start);
 
 	const createdTasks = tasks.map((t) => {
 		t.createDate = t.history[0].date;
@@ -101,7 +62,7 @@ function report(config, data) {
 		percentile85: percentile85,
 		linearApproximation: abLinear,
 		cfd: cfd,
-		cc: completedTasks.map((t, i, a) => toCC(t, i, a, abLinear)),
+		cc: MathHelper.controlChart(completedTasks, abLinear),
 		ht: MathHelper.histogram(completedTasks.map((t) => t.ct), percentile85),
 		longest: {
 			tasks: longestTasks,

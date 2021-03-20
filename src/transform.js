@@ -1,31 +1,16 @@
-function parse(data) {
-	const tasks = [];
+function transform(data, startStatus) {
+	return data.issues.filter((issue) => issue.changelog.histories.length > 0).map((issue) => {
+		const task = {key: issue.key, status: startStatus, history: [{status: startStatus, date: new Date(issue.changelog.histories[0].created)}]};
 
-	for (let i =0; i < data.issues.length; i++) {
-		const issue = data.issues[i];
-		const task = {"key": issue.key, "status": "Open", "history": []};
+		issue.changelog.histories.forEach((history) =>
+			history.items.filter((item) => item.field === "status").forEach((item) => {
+				task.history.push({status: item.toString, date: new Date(history.created)});
+				task.status = item.toString;
+			})
+		);
 
-		if (issue.changelog.histories.length > 0) {
-			task.history.push({"status" : "Open", "date" : new Date(issue.changelog.histories[0].created)});
-			for (let j = 0; j < issue.changelog.histories.length; j++) {
-				const history = issue.changelog.histories[j];
-				for (let k = 0; k < history.items.length; k++) {
-					const item = history.items[k];
-					if (item.field === "status") {
-						task.history.push({"status" : item.toString, "date" : new Date(history.created)});
-						task.status = item.toString;
-					}
-				}
-			}
-
-			tasks.push(task);
-		} else {
-			//console.log(task.key);
-		}
-
-	}
-
-	return tasks;
+		return task;
+	});
 }
 
-module.exports = parse;
+module.exports = transform;
