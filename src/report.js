@@ -8,7 +8,7 @@ function compareTasks(t1, t2) {
 
 function report(config, data) {
 	const statusHelper = new StatusHelper(config);
-	const tasks = transform(data, config.statuses.start);
+	const tasks = transform(data, config.statuses.start[0]);
 
 	const createdTasks = tasks.map((t) => {
 		t.createDate = t.history[0].date;
