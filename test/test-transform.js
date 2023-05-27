@@ -1,4 +1,4 @@
-const transform = require("../src/transform");
+const transform = require("../src/transform")
 
 describe("Transform should", () => {
 
@@ -22,7 +22,7 @@ describe("Transform should", () => {
 					}
 				}
 			]
-		};
+		}
 
 		const expected = [
 			{
@@ -40,11 +40,11 @@ describe("Transform should", () => {
 					{status: "In Progress", date: new Date("2015-03-22")},
 				]
 			}
-		];
+		]
 
-		const result = transform(arrange, "New");
+		const result = transform(arrange, "New")
 
-		expect(result).toEqual(expected);
-	});
+		expect(result).toEqual(expected)
+	})
 
-});
+})

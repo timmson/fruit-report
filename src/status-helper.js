@@ -1,21 +1,21 @@
 class StatusHelper {
 
 	constructor(config) {
-		this.statuses = config.statuses;
+		this.statuses = config.statuses
 	}
 
 	isBacklog(task) {
-		return this.statuses.start.includes(task.status);
+		return this.statuses.start.includes(task.status)
 	}
 
 	isWIP(task) {
-		return !(this.isBacklog(task) || this.isDone(task));
+		return !(this.isBacklog(task) || this.isDone(task))
 	}
 
 	isDone(task) {
-		return this.statuses.end.includes(task.status);
+		return this.statuses.end.includes(task.status)
 	}
 
 }
 
-module.exports = StatusHelper;
+module.exports = StatusHelper

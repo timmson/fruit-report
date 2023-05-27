@@ -1,4 +1,4 @@
-const JiraApi = require("jira-client");
+const JiraApi = require("jira-client")
 
 function fetch(credentials, config) {
 
@@ -9,15 +9,15 @@ function fetch(credentials, config) {
 		password: credentials.password,
 		apiVersion: "2",
 		strictSSL: false
-	});
+	})
     
 	const options = {
 		maxResults: config.maxResults,
 		fields: ["navigable"],
 		expand: ["changelog"]
-	};
+	}
     
-	return jira.searchJira(config.query, options);
+	return jira.searchJira(config.query, options)
 }
 
-module.exports = fetch;
+module.exports = fetch
