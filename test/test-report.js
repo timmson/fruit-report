@@ -1,4 +1,4 @@
-const report = require("../src/report");
+const report = require("../src/report")
 
 describe(" Report should", () => {
 
@@ -11,7 +11,7 @@ describe(" Report should", () => {
 				start: ["Open"],
 				end: ["Closed"]
 			}
-		};
+		}
 
 		const arrange = {
 			issues: [
@@ -32,12 +32,12 @@ describe(" Report should", () => {
 					}
 				}
 			]
-		};
+		}
 
-		const result = report(config, arrange);
+		const result = report(config, arrange)
 
-		expect(result.cc).toHaveLength(1);
-		expect(result).toBeDefined();
-	});
+		expect(result.cc).toHaveLength(1)
+		expect(result).toBeDefined()
+	})
 
-});
+})
